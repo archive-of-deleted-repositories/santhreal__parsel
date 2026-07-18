@@ -81,6 +81,8 @@ class TestTranslatorBase(ABC):
         [
             ("::attr(12)", ExpressionError),
             ("::attr(34test)", ExpressionError),
+            ('::attr("")', ExpressionError),
+            ("::attr('')", ExpressionError),
             ("::attr(@href)", SelectorSyntaxError),
         ],
     )

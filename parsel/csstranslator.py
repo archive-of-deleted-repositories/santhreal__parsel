@@ -119,7 +119,13 @@ class TranslatorMixin:
             raise ExpressionError(
                 f"Expected a single string or ident for ::attr(), got {function.arguments!r}"
             )
-        return XPathExpr.from_xpath(xpath, attribute=function.arguments[0].value)
+        attribute = function.arguments[0].value
+        # Empty name yields invalid XPath "/@" (lxml ValueError); reject here.
+        if not attribute:
+            raise ExpressionError(
+                f"Expected a non-empty attribute name for ::attr(), got {function.arguments!r}"
+            )
+        return XPathExpr.from_xpath(xpath, attribute=attribute)
 
     def xpath_text_simple_pseudo_element(self, xpath: OriginalXPathExpr) -> XPathExpr:
         """Support selecting text nodes using ::text pseudo-element"""
